@@ -27,24 +27,77 @@ class Client():
 
     @cpf.setter
     def cpf(self, client_cpf):
-        if validateCPF(client_cpf):
-            self.__cpf = client_cpf
-        else:
-            print("CPF not found")
+        def validateCPF(cpf):
+            if not re.match(r'\d{3}\.\d{3}\.\d{3}-\d{2}', cpf):
+                print('CPF is not in the correct pattern. Correct pattern: xxx.xxx.xxx-xx')
+                print()
+                cpf = input('''Try again. 
 
-    @email.setter
-    def email(self, client_email):
-        if not re.match(r'^[a-zA-Z0-9-_]+@[a-zA-Z0-9]+\.[a-z]{1,3}$', client_email):
-            print('Email not in the correct pattern. Correct pattern: username@company.domain')
+[0] Menu                
+CPF: ''')
+                if cpf == "0":
+                    menu()
+                else:	
+                    validateCPF(cpf)
+            else:	
+                numbers = [int(digit) for digit in cpf if digit.isdigit()]
+                first_validation = sum(a * b for a, b in zip(numbers[0:9], range(10, 1, -1)))
+                expected = (first_validation * 10 % 11) % 10
+                if numbers[9] != expected:
+                    return False
+
+                second_validation = sum(a * b for a, b in zip(numbers[0:10], range(11, 1, -1)))
+                expected = (second_validation * 10 % 11) % 10
+                if numbers[10] != expected:
+                    return False
+            self.__cpf = cpf
+            return True
+
+        if validateCPF(client_cpf):
+            pass
         else:
-            self.__email = client_email
+            print("CPF not found, stoping register")
+            menu()
 
     @birthdate.setter
     def birthdate(self, client_birthdate):
-        if not re.match(r'[0-9]{1,4}[\_|\-|\/|\|][0-9]{1,2}[\_|\-|\/|\|][0-9]{1,4}', client_birthdate):
-            print('Birthdate is not in the correct pattern. Correct pattern: dd/mm/yyyy')
-        else:
-            self.__birthdate = client_birthdate
+        def validateBirthdate(birthdate):
+            if not re.match(r'[0-9]{1,4}[\_|\-|\/|\|][0-9]{1,2}[\_|\-|\/|\|][0-9]{4}', birthdate):
+                print('Birthdate is not in the correct pattern. Correct pattern: dd/mm/yyyy')
+                print()
+                birthdate = input('''Try again. 
+                    
+[0] Menu
+Birthdate: ''')
+                if birthdate == "0":
+                    menu()
+                else:
+                    validateBirthdate(birthdate)
+            self.__birthdate = birthdate
+            return True
+
+        if validateBirthdate(client_birthdate):
+            pass
+
+    @email.setter
+    def email(self, client_email):
+        def validateEmail(email):
+            if not re.match(r'^[a-zA-Z0-9-_]+@[a-zA-Z0-9]+\.[a-z]{1,3}$', email):
+                print('Email not in the correct pattern. Correct pattern: username@company.domain')
+                print()
+                email = input('''Try again. 
+
+[0] Menu
+Email: ''')
+                if email == "0":
+                    menu()
+                else:
+                    validateEmail(email)
+            self.__email = email
+            return True
+        
+        if validateEmail(client_email):
+            pass
 
     def create_Account():
         client = Client()
@@ -53,23 +106,13 @@ class Client():
         client.birthdate = input("Nascimento: ")
         client.email = input("Email: ")
 
-def validateCPF(cpf):
-    if not re.match(r'\d{3}\.\d{3}\.\d{3}-\d{2}', cpf):
-        print('CPF is not in the correct pattern. Correct pattern: xxx.xxx.xxx-xx')
-    else:	
-        numbers = [int(digit) for digit in cpf if digit.isdigit()]
-        first_validation = sum(a * b for a, b in zip(numbers[0:9], range(10, 1, -1)))
-        expected = (first_validation * 10 % 11) % 10
-        if numbers[9] != expected:
-            return False
+        print(f''' {'='*10} Client Data {'='*10}
 
-        second_validation = sum(a * b for a, b in zip(numbers[0:10], range(11, 1, -1)))
-        expected = (second_validation * 10 % 11) % 10
-        if numbers[10] != expected:
-            return False
-        return True
-
-
+    Name: {client.name}
+    CPF: {client.cpf}
+    Birthdate: {client.birthdate}
+    Email: {client.email}
+    ''')
 
 def menu():
     print(f''' {'='*10} Salles Bank {'='*10}
