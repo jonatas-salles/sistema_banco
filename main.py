@@ -20,17 +20,30 @@ class Client():
 
     @name.setter
     def name(self, client_name):
-        if type(client_name) == type(str()):
-            self.__name = client_name
-        else:
-            print("Name must be a string")
+        def validateName(name):
+            if re.match(r'[^a-zA-Z]', name):
+                print()
+                print("Name must be only letters")
+                name = input('''Try Again.
+
+[0] Menu
+Name: ''')
+                if name == "0":
+                    menu()
+                else:	
+                    validateName(name)
+            self.__name = name
+            return True
+
+        if validateName(client_name):
+            pass
 
     @cpf.setter
     def cpf(self, client_cpf):
         def validateCPF(cpf):
             if not re.match(r'\d{3}\.\d{3}\.\d{3}-\d{2}', cpf):
-                print('CPF is not in the correct pattern. Correct pattern: xxx.xxx.xxx-xx')
                 print()
+                print('CPF is not in the correct pattern. Correct pattern: xxx.xxx.xxx-xx')
                 cpf = input('''Try again. 
 
 [0] Menu                
@@ -63,8 +76,8 @@ CPF: ''')
     def birthdate(self, client_birthdate):
         def validateBirthdate(birthdate):
             if not re.match(r'[0-9]{1,4}[\_|\-|\/|\|][0-9]{1,2}[\_|\-|\/|\|][0-9]{4}', birthdate):
-                print('Birthdate is not in the correct pattern. Correct pattern: dd/mm/yyyy')
                 print()
+                print('Birthdate is not in the correct pattern. Correct pattern: dd/mm/yyyy')
                 birthdate = input('''Try again. 
                     
 [0] Menu
@@ -83,8 +96,8 @@ Birthdate: ''')
     def email(self, client_email):
         def validateEmail(email):
             if not re.match(r'^[a-zA-Z0-9-_]+@[a-zA-Z0-9]+\.[a-z]{1,3}$', email):
-                print('Email not in the correct pattern. Correct pattern: username@company.domain')
                 print()
+                print('Email not in the correct pattern. Correct pattern: username@company.domain')
                 email = input('''Try again. 
 
 [0] Menu
