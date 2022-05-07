@@ -1,4 +1,6 @@
 import re
+import pandas as pd
+from excelData import *
 
 class Client():
 
@@ -118,6 +120,7 @@ Email: ''')
         client.cpf = input("CPF: ")
         client.birthdate = input("Nascimento: ")
         client.email = input("Email: ")
+        client.balance = 100
 
         print(f''' {'='*10} Client Data {'='*10}
 
@@ -126,6 +129,19 @@ Email: ''')
     Birthdate: {client.birthdate}
     Email: {client.email}
     ''')
+
+        df = pd.DataFrame({f'Name': [client.name],
+                            'Cpf': [client.cpf],
+                            'Birthdate': [client.birthdate],
+                            'Email': [client.email],
+                            'balance': [client.balance]})
+
+        readExcel(df)
+
+class Account(Client):
+    def __init__(self):
+        super().__init__()
+
 
 def menu():
     print(f''' {'='*10} Salles Bank {'='*10}
